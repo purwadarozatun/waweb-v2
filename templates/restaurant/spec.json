@@ -1,0 +1,62 @@
+{
+  "name": "Restaurant Template",
+  "description": "Beautiful restaurant landing page with photo gallery uploads",
+  "thumbnail": "/static/templates/restaurant.png",
+  "fields": {
+    "restaurant_name": {
+      "label": "Restaurant Name",
+      "type": "text",
+      "default": "My Restaurant"
+    },
+    "tagline": {
+      "label": "Tagline",
+      "type": "text",
+      "default": "Fresh & Delicious"
+    },
+    "about_text": {
+      "label": "About Us",
+      "type": "textarea",
+      "default": "Welcome to our restaurant where every dish is crafted with love and the freshest ingredients."
+    },
+    "address": {
+      "label": "Address",
+      "type": "text",
+      "default": "123 Main Street, City"
+    },
+    "phone": {
+      "label": "Phone Number",
+      "type": "text",
+      "default": "+1 234 567 890"
+    },
+    "hours": {
+      "label": "Opening Hours",
+      "type": "text",
+      "default": "Mon–Sun: 11:00 – 22:00"
+    },
+    "hero_image": {
+      "label": "Hero / Banner Image",
+      "type": "image",
+      "default": ""
+    },
+    "gallery_1": {
+      "label": "Gallery Image 1",
+      "type": "image",
+      "default": ""
+    },
+    "gallery_2": {
+      "label": "Gallery Image 2",
+      "type": "image",
+      "default": ""
+    },
+    "gallery_3": {
+      "label": "Gallery Image 3",
+      "type": "image",
+      "default": ""
+    },
+    "accent_color": {
+      "label": "Accent Color",
+      "type": "color",
+      "default": "#e67e22"
+    }
+  }
+}

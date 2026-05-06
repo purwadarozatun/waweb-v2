@@ -1,0 +1,77 @@
+{
+  "name": "Simple Landing Page",
+  "description": "A clean and modern landing page template",
+  "thumbnail": "/static/templates/simple-landing.png",
+  "fields": {
+    "site_title": {
+      "label": "Site Title",
+      "type": "text",
+      "default": "Welcome to My Website"
+    },
+    "site_description": {
+      "label": "Site Description",
+      "type": "textarea",
+      "default": "Build amazing websites with ease"
+    },
+    "hero_title": {
+      "label": "Hero Title",
+      "type": "text",
+      "default": "Build Your Dream Website"
+    },
+    "hero_subtitle": {
+      "label": "Hero Subtitle",
+      "type": "text",
+      "default": "Create stunning websites without any coding knowledge"
+    },
+    "cta_text": {
+      "label": "Call to Action Button",
+      "type": "text",
+      "default": "Get Started"
+    },
+    "cta_link": {
+      "label": "CTA Link",
+      "type": "text",
+      "default": "#"
+    },
+    "primary_color": {
+      "label": "Primary Color",
+      "type": "color",
+      "default": "#3b82f6"
+    },
+    "feature_1_title": {
+      "label": "Feature 1 Title",
+      "type": "text",
+      "default": "Easy to Use"
+    },
+    "feature_1_description": {
+      "label": "Feature 1 Description",
+      "type": "textarea",
+      "default": "No coding required. Simple drag and drop interface."
+    },
+    "feature_2_title": {
+      "label": "Feature 2 Title",
+      "type": "text",
+      "default": "Fast & Reliable"
+    },
+    "feature_2_description": {
+      "label": "Feature 2 Description",
+      "type": "textarea",
+      "default": "Lightning fast performance with 99.9% uptime guarantee."
+    },
+    "feature_3_title": {
+      "label": "Feature 3 Title",
+      "type": "text",
+      "default": "Fully Customizable"
+    },
+    "feature_3_description": {
+      "label": "Feature 3 Description",
+      "type": "textarea",
+      "default": "Customize every aspect of your website to match your brand."
+    },
+    "footer_text": {
+      "label": "Footer Text",
+      "type": "text",
+      "default": "© 2024 Your Company. All rights reserved."
+    }
+  }
+}

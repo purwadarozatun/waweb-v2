@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="site-title">My Portfolio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Georgia', serif;
+            line-height: 1.8;
+            color: #2d3748;
+            background: #f7fafc;
+        }
+        
+        :root {
+            --accent-color: #8b5cf6;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background: white;
+            padding: 4rem 0;
+            text-align: center;
+            border-bottom: 3px solid var(--accent-color);
+        }
+        
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            color: #1a202c;
+        }
+        
+        header p {
+            color: var(--accent-color);
+            font-size: 1.2rem;
+        }
+        
+        section {
+            background: white;
+            margin: 2rem auto;
+            padding: 3rem 2rem;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        h2 {
+            color: var(--accent-color);
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+        }
+        
+        .projects {
+            display: grid;
+            gap: 2rem;
+        }
+        
+        .project {
+            padding: 1.5rem;
+            border-left: 4px solid var(--accent-color);
+            background: #f7fafc;
+        }
+        
+        .project h3 {
+            color: #1a202c;
+            margin-bottom: 0.5rem;
+        }
+        
+        .contact {
+            text-align: center;
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .social-links a {
+            color: var(--accent-color);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border: 2px solid var(--accent-color);
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+        
+        .social-links a:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: #718096;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1 id="name">John Doe</h1>
+            <p id="tagline">Web Developer & Designer</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <section>
+            <h2>About Me</h2>
+            <p id="about">I'm a passionate web developer with 5 years of experience creating beautiful and functional websites.</p>
+        </section>
+
+        <section>
+            <h2>Projects</h2>
+            <div class="projects">
+                <div class="project">
+                    <h3 id="project-1-title">E-commerce Platform</h3>
+                    <p id="project-1-description">A full-featured e-commerce platform built with modern technologies.</p>
+                </div>
+                <div class="project">
+                    <h3 id="project-2-title">Mobile App</h3>
+                    <p id="project-2-description">Cross-platform mobile application with real-time features.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="contact">
+            <h2>Get In Touch</h2>
+            <p>Email: <a href="mailto:" id="email-link"><span id="email">hello@example.com</span></a></p>
+            <div class="social-links">
+                <a href="#" id="github-link" target="_blank">GitHub</a>
+                <a href="#" id="linkedin-link" target="_blank">LinkedIn</a>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>&copy; <span id="year"></span> <span id="footer-name">John Doe</span></p>
+    </footer>
+
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+        
+        fetch('values.json')
+            .then(response => response.json())
+            .then(values => {
+                if (values.site_title) {
+                    document.title = values.site_title;
+                }
+                
+                if (values.accent_color) {
+                    document.documentElement.style.setProperty('--accent-color', values.accent_color);
+                }
+                
+                Object.keys(values).forEach(key => {
+                    const element = document.getElementById(key.replace(/_/g, '-'));
+                    if (element) {
+                        element.textContent = values[key];
+                    }
+                    
+                    if (key === 'email') {
+                        const emailLink = document.getElementById('email-link');
+                        if (emailLink) emailLink.href = 'mailto:' + values[key];
+                    }
+                    
+                    if (key === 'github' || key === 'linkedin') {
+                        const link = document.getElementById(key + '-link');
+                        if (link) link.href = values[key];
+                    }
+                    
+                    if (key === 'name') {
+                        document.getElementById('footer-name').textContent = values[key];
+                    }
+                });
+            })
+            .catch(error => console.error('Error loading values:', error));
+    </script>
+</body>
+</html>

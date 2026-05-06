@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="site-title">Welcome</title>
+    <meta name="description" id="site-description" content="Description">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+        
+        :root {
+            --primary-color: #3b82f6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 1rem 0;
+        }
+        
+        .hero {
+            background: linear-gradient(135deg, var(--primary-color), #1e40af);
+            color: white;
+            padding: 6rem 0;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .hero p {
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: white;
+            color: var(--primary-color);
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .features {
+            padding: 4rem 0;
+            background: #f9fafb;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .feature-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .feature-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        
+        footer {
+            background: #1f2937;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h2 id="header-title">My Website</h2>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1 id="hero-title">Build Your Dream Website</h1>
+            <p id="hero-subtitle">Create stunning websites without any coding knowledge</p>
+            <a href="#" id="cta-button" class="cta-button">Get Started</a>
+        </div>
+    </section>
+
+    <section class="features">
+        <div class="container">
+            <h2 style="text-align: center; margin-bottom: 1rem;">Features</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3 id="feature-1-title">Easy to Use</h3>
+                    <p id="feature-1-description">No coding required. Simple drag and drop interface.</p>
+                </div>
+                <div class="feature-card">
+                    <h3 id="feature-2-title">Fast & Reliable</h3>
+                    <p id="feature-2-description">Lightning fast performance with 99.9% uptime guarantee.</p>
+                </div>
+                <div class="feature-card">
+                    <h3 id="feature-3-title">Fully Customizable</h3>
+                    <p id="feature-3-description">Customize every aspect of your website to match your brand.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p id="footer-text">© 2024 Your Company. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Load values from values.json
+        fetch('values.json')
+            .then(response => response.json())
+            .then(values => {
+                // Update page title
+                if (values.site_title) {
+                    document.title = values.site_title;
+                    document.getElementById('header-title').textContent = values.site_title;
+                }
+                
+                // Update meta description
+                if (values.site_description) {
+                    document.querySelector('meta[name="description"]').setAttribute('content', values.site_description);
+                }
+                
+                // Update primary color
+                if (values.primary_color) {
+                    document.documentElement.style.setProperty('--primary-color', values.primary_color);
+                }
+                
+                // Update all text elements
+                Object.keys(values).forEach(key => {
+                    const element = document.getElementById(key.replace(/_/g, '-'));
+                    if (element) {
+                        if (element.tagName === 'A' && key.includes('link')) {
+                            element.href = values[key];
+                        } else if (element.tagName === 'A' && key.includes('cta_text')) {
+                            element.textContent = values[key];
+                        } else {
+                            element.textContent = values[key];
+                        }
+                    }
+                });
+            })
+            .catch(error => console.error('Error loading values:', error));
+    </script>
+</body>
+</html>

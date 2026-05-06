@@ -1,0 +1,576 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.shell{display:flex;flex-direction:column;height:700px;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden;background:var(--color-background-primary)}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:0 16px;height:46px;border-bottom:0.5px solid var(--color-border-tertiary);flex-shrink:0}
+.topbar-brand{font-size:14px;font-weight:500;display:flex;align-items:center;gap:8px}
+.brand-dot{width:8px;height:8px;border-radius:50%;background:var(--color-text-primary)}
+.topbar-nav{display:flex;gap:2px}
+.nav-btn{font-size:13px;padding:4px 12px;border-radius:var(--border-radius-md);border:0.5px solid transparent;background:transparent;color:var(--color-text-secondary);cursor:pointer;transition:all .15s}
+.nav-btn.active{background:var(--color-background-secondary);border-color:var(--color-border-secondary);color:var(--color-text-primary)}
+.nav-btn:hover:not(.active){color:var(--color-text-primary)}
+.topbar-right{display:flex;align-items:center;gap:8px}
+.avatar{width:28px;height:28px;border-radius:50%;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;color:var(--color-text-secondary)}
+
+.screen{flex:1;overflow:hidden;display:none}
+.screen.active{display:flex;flex-direction:column}
+
+.dashboard-body{flex:1;overflow-y:auto;padding:24px}
+.dash-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.dash-title{font-size:18px;font-weight:500}
+.btn-new{font-size:13px;padding:7px 14px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);background:var(--color-text-primary);color:var(--color-background-primary);cursor:pointer;font-weight:500;display:flex;align-items:center;gap:6px}
+.sites-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
+.site-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden;cursor:pointer;transition:border-color .15s}
+.site-card:hover{border-color:var(--color-border-secondary)}
+.site-thumb{height:100px;background:var(--color-background-secondary);display:flex;align-items:center;justify-content:center;font-size:28px;color:var(--color-text-tertiary);border-bottom:0.5px solid var(--color-border-tertiary)}
+.site-info{padding:10px 12px}
+.site-name{font-size:13px;font-weight:500;margin-bottom:2px}
+.site-meta{font-size:11px;color:var(--color-text-tertiary);display:flex;align-items:center;gap:6px}
+.site-status{display:inline-flex;align-items:center;gap:4px;font-size:11px;padding:2px 7px;border-radius:100px}
+.site-status.live{background:#EAF3DE;color:#3B6D11}
+.site-status.draft{background:var(--color-background-secondary);color:var(--color-text-tertiary);border:0.5px solid var(--color-border-tertiary)}
+.site-card-new{border:1.5px dashed var(--color-border-secondary);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:160px;cursor:pointer;transition:all .15s;gap:8px}
+.site-card-new:hover{border-color:var(--color-text-primary);background:var(--color-background-secondary)}
+.site-card-new span{font-size:13px;color:var(--color-text-tertiary)}
+
+.tpl-body{flex:1;overflow-y:auto;padding:24px}
+.tpl-header{margin-bottom:20px}
+.tpl-title{font-size:18px;font-weight:500;margin-bottom:4px}
+.tpl-sub{font-size:13px;color:var(--color-text-secondary)}
+.tpl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
+.tpl-card{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden;cursor:pointer;transition:all .15s}
+.tpl-card:hover{border-color:var(--color-border-primary)}
+.tpl-card.selected{border:2px solid var(--color-text-primary)}
+.tpl-preview{height:120px;display:flex;align-items:center;justify-content:center;background:var(--color-background-secondary);border-bottom:0.5px solid var(--color-border-tertiary)}
+.tpl-info{padding:10px 12px}
+.tpl-name{font-size:13px;font-weight:500;margin-bottom:2px}
+.tpl-desc{font-size:11px;color:var(--color-text-tertiary)}
+.tpl-spec-bar{padding:8px 12px;border-top:0.5px solid var(--color-border-tertiary);background:var(--color-background-secondary);display:flex;gap:6px;flex-wrap:wrap}
+.spec-pill{font-size:10px;padding:2px 7px;border-radius:100px;background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);color:var(--color-text-secondary)}
+.tpl-footer{display:flex;justify-content:flex-end;padding:12px 24px;border-top:0.5px solid var(--color-border-tertiary);gap:8px}
+.btn-ghost{font-size:13px;padding:7px 14px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);background:transparent;color:var(--color-text-secondary);cursor:pointer}
+.btn-primary{font-size:13px;padding:7px 14px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);background:var(--color-text-primary);color:var(--color-background-primary);cursor:pointer;font-weight:500}
+
+.builder-body{display:flex;flex:1;overflow:hidden}
+.sidebar{width:240px;border-right:0.5px solid var(--color-border-tertiary);display:flex;flex-direction:column;overflow:hidden;background:var(--color-background-secondary);flex-shrink:0}
+.sb-section{border-bottom:0.5px solid var(--color-border-tertiary);padding:8px}
+.sb-label{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--color-text-tertiary);padding:4px 8px 6px}
+.sb-file{display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:var(--border-radius-md);font-size:12px;color:var(--color-text-secondary);cursor:default;font-family:var(--font-mono)}
+.sb-file i{font-size:14px;color:var(--color-text-tertiary)}
+.sb-file .file-locked{font-size:10px;padding:1px 5px;border-radius:100px;background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);color:var(--color-text-tertiary);margin-left:auto}
+.sb-asset{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:var(--border-radius-md);cursor:pointer;border:0.5px solid transparent;transition:all .15s;margin-bottom:2px}
+.sb-asset:hover{background:var(--color-background-primary);border-color:var(--color-border-tertiary)}
+.sb-asset.sel{background:var(--color-background-primary);border-color:var(--color-border-secondary)}
+.sb-asset-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.sb-asset-icon.img{background:#E6F1FB;color:#185FA5}
+.sb-asset-icon.txt{background:#EAF3DE;color:#3B6D11}
+.sb-asset-meta{flex:1;min-width:0}
+.sb-asset-key{font-size:12px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sb-asset-type{font-size:10px;color:var(--color-text-tertiary)}
+.status-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.status-dot.done{background:#639922}
+.status-dot.pend{background:var(--color-border-secondary)}
+
+.prog-wrap{padding:10px 12px;border-bottom:0.5px solid var(--color-border-tertiary)}
+.prog-row{display:flex;justify-content:space-between;font-size:11px;color:var(--color-text-secondary);margin-bottom:5px}
+.prog-track{height:3px;border-radius:100px;background:var(--color-border-tertiary);overflow:hidden}
+.prog-fill{height:100%;border-radius:100px;background:var(--color-text-primary);transition:width .4s}
+
+.main-area{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.builder-tabs{display:flex;border-bottom:0.5px solid var(--color-border-tertiary);padding:0 16px;gap:4px;height:40px;align-items:flex-end;flex-shrink:0}
+.btab{font-size:12px;padding:6px 12px;border:0.5px solid transparent;border-bottom:none;border-radius:var(--border-radius-md) var(--border-radius-md) 0 0;cursor:pointer;background:transparent;color:var(--color-text-secondary);display:flex;align-items:center;gap:5px;transition:all .15s}
+.btab.active{background:var(--color-background-primary);border-color:var(--color-border-tertiary);border-bottom-color:var(--color-background-primary);color:var(--color-text-primary);margin-bottom:-0.5px}
+.btab:hover:not(.active){color:var(--color-text-primary)}
+
+.panel{flex:1;overflow:hidden;display:none;flex-direction:column}
+.panel.active{display:flex}
+
+.upload-area{flex:1;overflow-y:auto;padding:20px}
+.asset-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:18px;margin-bottom:14px}
+.ac-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px}
+.ac-title{font-size:14px;font-weight:500}
+.ac-path{font-size:11px;color:var(--color-text-tertiary);font-family:var(--font-mono);margin-top:2px}
+.type-badge{font-size:10px;padding:3px 8px;border-radius:100px;font-weight:500}
+.type-badge.img{background:#E6F1FB;color:#185FA5}
+.type-badge.txt{background:#EAF3DE;color:#3B6D11}
+.dropzone{border:1.5px dashed var(--color-border-secondary);border-radius:var(--border-radius-md);padding:24px;text-align:center;cursor:pointer;position:relative;transition:all .2s}
+.dropzone:hover{border-color:var(--color-text-primary);background:var(--color-background-secondary)}
+.dropzone input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.dz-icon{font-size:24px;color:var(--color-text-tertiary);margin-bottom:6px}
+.dz-text{font-size:13px;color:var(--color-text-secondary)}
+.dz-sub{font-size:11px;color:var(--color-text-tertiary);margin-top:3px}
+.uploaded-box{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);overflow:hidden}
+.ub-bar{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:var(--color-background-secondary)}
+.ub-name{font-size:12px;font-weight:500;display:flex;align-items:center;gap:6px;color:var(--color-text-primary)}
+.ub-img{width:100%;height:140px;object-fit:cover;display:block}
+.btn-rm{font-size:11px;border:none;background:none;cursor:pointer;color:var(--color-text-tertiary);padding:2px 6px;border-radius:4px}
+.btn-rm:hover{color:#A32D2D}
+.text-inp textarea{width:100%;min-height:72px;resize:vertical;font-size:13px;padding:9px 11px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);background:var(--color-background-primary);color:var(--color-text-primary);font-family:var(--font-sans);line-height:1.5}
+.text-inp textarea:focus{outline:none;border-color:var(--color-text-primary)}
+.save-banner{display:flex;align-items:center;gap:6px;padding:8px 12px;background:#EAF3DE;border:0.5px solid #C0DD97;border-radius:var(--border-radius-md);font-size:12px;color:#3B6D11;margin-top:10px}
+.path-info{display:flex;align-items:center;gap:6px;padding:7px 10px;background:var(--color-background-secondary);border-radius:var(--border-radius-md);margin-top:10px;font-size:11px;color:var(--color-text-secondary);font-family:var(--font-mono)}
+.empty-pick{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:var(--color-text-tertiary);gap:8px}
+.empty-pick i{font-size:32px}
+.empty-pick p{font-size:13px}
+
+.spec-area{flex:1;overflow-y:auto;padding:20px}
+.spec-file{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden;margin-bottom:12px}
+.spec-fhead{display:flex;align-items:center;gap:8px;padding:10px 14px;border-bottom:0.5px solid var(--color-border-tertiary)}
+.spec-fname{font-size:12px;font-weight:500;font-family:var(--font-mono)}
+.spec-fdesc{font-size:11px;color:var(--color-text-tertiary);margin-left:auto}
+.spec-code{padding:12px 14px;font-size:11px;font-family:var(--font-mono);color:var(--color-text-secondary);line-height:1.75;white-space:pre;overflow-x:auto;background:var(--color-background-secondary)}
+
+.preview-frame{flex:1;display:flex;flex-direction:column;background:var(--color-background-tertiary);overflow:hidden}
+.prev-bar{display:flex;align-items:center;gap:8px;padding:8px 14px;background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary)}
+.prev-dots{display:flex;gap:5px}
+.prev-dot{width:9px;height:9px;border-radius:50%}
+.prev-dot.r{background:#E24B4A}.prev-dot.a{background:#EF9F27}.prev-dot.g{background:#639922}
+.prev-addr{flex:1;display:flex;align-items:center;gap:6px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:5px 9px;font-size:11px;color:var(--color-text-secondary);font-family:var(--font-mono)}
+.dev-btns{display:flex;gap:2px}
+.dev-btn{width:26px;height:26px;border-radius:var(--border-radius-md);border:0.5px solid transparent;background:transparent;display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer;color:var(--color-text-secondary);transition:all .15s}
+.dev-btn.active,.dev-btn:hover{background:var(--color-background-secondary);border-color:var(--color-border-tertiary);color:var(--color-text-primary)}
+.prev-canvas{flex:1;display:flex;align-items:flex-start;justify-content:center;padding:16px;overflow-y:auto}
+.site-frame{background:var(--color-background-primary);border-radius:var(--border-radius-lg);border:0.5px solid var(--color-border-secondary);overflow:hidden;min-height:360px;transition:width .3s}
+.site-frame.desktop{width:100%}.site-frame.tablet{width:540px}.site-frame.mobile{width:320px}
+.sf-nav{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;border-bottom:0.5px solid var(--color-border-tertiary)}
+.sf-logo{font-size:13px;font-weight:500}
+.sf-links{display:flex;gap:14px;font-size:11px;color:var(--color-text-secondary)}
+.sf-hero{padding:28px 24px}
+.sf-tag{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.1em;color:var(--color-text-tertiary);margin-bottom:8px}
+.sf-title{font-size:22px;font-weight:500;line-height:1.25;margin-bottom:10px;max-width:380px}
+.sf-desc{font-size:12px;color:var(--color-text-secondary);line-height:1.6;margin-bottom:16px;max-width:320px}
+.sf-cta{display:inline-block;padding:8px 16px;background:var(--color-text-primary);color:var(--color-background-primary);border-radius:var(--border-radius-md);font-size:12px;font-weight:500}
+.sf-img{width:100%;height:160px;object-fit:cover;display:block;background:var(--color-background-secondary);display:flex;align-items:center;justify-content:center;color:var(--color-text-tertiary);font-size:11px;margin-top:16px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-tertiary)}
+
+.publish-overlay{position:absolute;inset:0;background:rgba(0,0,0,0.45);display:flex;align-items:center;justify-content:center;z-index:10}
+.publish-modal{background:var(--color-background-primary);border-radius:var(--border-radius-lg);border:0.5px solid var(--color-border-secondary);padding:24px;width:340px}
+.pm-title{font-size:16px;font-weight:500;margin-bottom:4px}
+.pm-sub{font-size:13px;color:var(--color-text-secondary);margin-bottom:20px}
+.pm-field{margin-bottom:14px}
+.pm-label{font-size:12px;color:var(--color-text-secondary);margin-bottom:5px}
+.pm-input{width:100%;font-size:13px;padding:8px 10px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);background:var(--color-background-primary);color:var(--color-text-primary);font-family:var(--font-mono)}
+.pm-input:focus{outline:none;border-color:var(--color-text-primary)}
+.pm-url-preview{font-size:11px;color:var(--color-text-tertiary);font-family:var(--font-mono);margin-top:5px}
+.pm-checklist{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 12px;margin-bottom:18px}
+.pm-check-row{display:flex;align-items:center;gap:8px;font-size:12px;padding:3px 0}
+.pm-check-row i{font-size:14px}
+.pm-check-row.ok{color:#3B6D11}
+.pm-check-row.warn{color:#854F0B}
+.pm-actions{display:flex;gap:8px;justify-content:flex-end}
+
+.builder-topbar{display:flex;align-items:center;justify-content:space-between;padding:0 14px;height:42px;border-bottom:0.5px solid var(--color-border-tertiary);flex-shrink:0;background:var(--color-background-secondary)}
+.bsite-info{display:flex;align-items:center;gap:8px}
+.bsite-name{font-size:13px;font-weight:500}
+.btpl-badge{font-size:10px;padding:2px 7px;border-radius:100px;background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);color:var(--color-text-tertiary)}
+.bactions{display:flex;gap:6px;align-items:center}
+.btn-prev-sm{font-size:12px;padding:5px 10px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);background:transparent;color:var(--color-text-secondary);cursor:pointer;display:flex;align-items:center;gap:4px}
+.btn-pub-sm{font-size:12px;padding:5px 12px;border-radius:var(--border-radius-md);border:none;background:var(--color-text-primary);color:var(--color-background-primary);cursor:pointer;font-weight:500}
+</style>
+
+<h2 class="sr-only">Website builder — dashboard multi-site, template picker, builder, dan publish flow</h2>
+
+<div class="shell" id="shell">
+  <div class="topbar">
+    <div class="topbar-brand">
+      <div class="brand-dot"></div>
+      Peperclip Sites
+    </div>
+    <div class="topbar-nav">
+      <button class="nav-btn active" id="nav-dash" onclick="goScreen('dash')">Sites</button>
+      <button class="nav-btn" id="nav-templates" onclick="goScreen('templates')">Templates</button>
+    </div>
+    <div class="topbar-right">
+      <div class="avatar">PA</div>
+    </div>
+  </div>
+
+  <div class="screen active" id="screen-dash">
+    <div class="dashboard-body">
+      <div class="dash-header">
+        <div class="dash-title">My sites</div>
+        <button class="btn-new" onclick="goScreen('templates')"><i class="ti ti-plus" aria-hidden="true"></i> New site</button>
+      </div>
+      <div class="sites-grid">
+        <div class="site-card" onclick="openBuilder('klinik-sehat','Landing Page v1')">
+          <div class="site-thumb"><i class="ti ti-building-hospital" aria-hidden="true"></i></div>
+          <div class="site-info">
+            <div class="site-name">Klinik Sehat Bersama</div>
+            <div class="site-meta">
+              <span class="site-status live"><i class="ti ti-circle-check" style="font-size:11px" aria-hidden="true"></i> Live</span>
+              <span>landing-v1</span>
+            </div>
+          </div>
+        </div>
+        <div class="site-card" onclick="openBuilder('dental-rakyat','Clinic Pro v2')">
+          <div class="site-thumb"><i class="ti ti-tooth" aria-hidden="true"></i></div>
+          <div class="site-info">
+            <div class="site-name">PT Dental Rakyat</div>
+            <div class="site-meta">
+              <span class="site-status live"><i class="ti ti-circle-check" style="font-size:11px" aria-hidden="true"></i> Live</span>
+              <span>clinic-pro-v2</span>
+            </div>
+          </div>
+        </div>
+        <div class="site-card" onclick="openBuilder('franchise-os','Business v1')">
+          <div class="site-thumb"><i class="ti ti-briefcase" aria-hidden="true"></i></div>
+          <div class="site-info">
+            <div class="site-name">Franchise Clinic OS</div>
+            <div class="site-meta">
+              <span class="site-status draft">Draft</span>
+              <span>business-v1</span>
+            </div>
+          </div>
+        </div>
+        <div class="site-card site-card-new" onclick="goScreen('templates')">
+          <i class="ti ti-plus" style="font-size:24px;color:var(--color-text-tertiary)" aria-hidden="true"></i>
+          <span>New site</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="screen" id="screen-templates">
+    <div class="tpl-body">
+      <div class="tpl-header">
+        <div class="tpl-title">Choose a template</div>
+        <div class="tpl-sub">Each template includes index.html, app.js, style.css, dan spec.json</div>
+      </div>
+      <div class="tpl-grid" id="tpl-grid">
+        <div class="tpl-card" id="tpl-landing" onclick="selectTpl('landing')">
+          <div class="tpl-preview"><i class="ti ti-layout-bottombar" style="font-size:36px;color:var(--color-text-tertiary)" aria-hidden="true"></i></div>
+          <div class="tpl-info">
+            <div class="tpl-name">Landing Page v1</div>
+            <div class="tpl-desc">Hero, CTA, features section</div>
+          </div>
+          <div class="tpl-spec-bar">
+            <span class="spec-pill">2 images</span>
+            <span class="spec-pill">3 texts</span>
+          </div>
+        </div>
+        <div class="tpl-card" id="tpl-clinic" onclick="selectTpl('clinic')">
+          <div class="tpl-preview"><i class="ti ti-stethoscope" style="font-size:36px;color:var(--color-text-tertiary)" aria-hidden="true"></i></div>
+          <div class="tpl-info">
+            <div class="tpl-name">Clinic Pro v2</div>
+            <div class="tpl-desc">Jadwal dokter, layanan, profil</div>
+          </div>
+          <div class="tpl-spec-bar">
+            <span class="spec-pill">4 images</span>
+            <span class="spec-pill">6 texts</span>
+          </div>
+        </div>
+        <div class="tpl-card" id="tpl-biz" onclick="selectTpl('biz')">
+          <div class="tpl-preview"><i class="ti ti-building" style="font-size:36px;color:var(--color-text-tertiary)" aria-hidden="true"></i></div>
+          <div class="tpl-info">
+            <div class="tpl-name">Business v1</div>
+            <div class="tpl-desc">Company profile, tentang kami</div>
+          </div>
+          <div class="tpl-spec-bar">
+            <span class="spec-pill">3 images</span>
+            <span class="spec-pill">5 texts</span>
+          </div>
+        </div>
+        <div class="tpl-card" id="tpl-portfolio" onclick="selectTpl('portfolio')">
+          <div class="tpl-preview"><i class="ti ti-photo" style="font-size:36px;color:var(--color-text-tertiary)" aria-hidden="true"></i></div>
+          <div class="tpl-info">
+            <div class="tpl-name">Portfolio v1</div>
+            <div class="tpl-desc">Galeri karya, kontak</div>
+          </div>
+          <div class="tpl-spec-bar">
+            <span class="spec-pill">6 images</span>
+            <span class="spec-pill">2 texts</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="tpl-footer">
+      <button class="btn-ghost" onclick="goScreen('dash')">Batal</button>
+      <button class="btn-primary" id="tpl-use-btn" onclick="useTpl()" disabled style="opacity:.4">Gunakan template ↗</button>
+    </div>
+  </div>
+
+  <div class="screen" id="screen-builder">
+    <div class="builder-topbar">
+      <div class="bsite-info">
+        <i class="ti ti-arrow-left" style="font-size:16px;cursor:pointer;color:var(--color-text-secondary)" onclick="goScreen('dash')" aria-label="kembali ke dashboard" aria-hidden="false"></i>
+        <div class="bsite-name" id="builder-site-name">Klinik Sehat Bersama</div>
+        <div class="btpl-badge" id="builder-tpl-badge">Landing Page v1</div>
+      </div>
+      <div class="bactions">
+        <button class="btn-prev-sm" onclick="switchBuilderTab('preview')"><i class="ti ti-eye" aria-hidden="true"></i> Preview</button>
+        <button class="btn-pub-sm" onclick="showPublish()">Publish →</button>
+      </div>
+    </div>
+    <div class="builder-body">
+      <div class="sidebar">
+        <div class="prog-wrap">
+          <div class="prog-row"><span>Upload progress</span><span id="prog-label">3 / 5</span></div>
+          <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:60%"></div></div>
+        </div>
+        <div class="sb-section">
+          <div class="sb-label">Template files</div>
+          <div class="sb-file"><i class="ti ti-file-code" aria-hidden="true"></i> index.html <span class="file-locked">read-only</span></div>
+          <div class="sb-file"><i class="ti ti-brand-javascript" aria-hidden="true"></i> app.js <span class="file-locked">read-only</span></div>
+          <div class="sb-file"><i class="ti ti-palette" aria-hidden="true"></i> style.css <span class="file-locked">read-only</span></div>
+          <div class="sb-file"><i class="ti ti-file-description" aria-hidden="true"></i> spec.json <span class="file-locked">read-only</span></div>
+        </div>
+        <div class="sb-section" style="flex:1;overflow-y:auto">
+          <div class="sb-label">Assets</div>
+          <div id="sb-asset-list"></div>
+        </div>
+      </div>
+      <div class="main-area">
+        <div class="builder-tabs">
+          <button class="btab active" id="btab-upload" onclick="switchBuilderTab('upload')"><i class="ti ti-upload" aria-hidden="true"></i> Upload aset</button>
+          <button class="btab" id="btab-spec" onclick="switchBuilderTab('spec')"><i class="ti ti-file-code" aria-hidden="true"></i> Spec</button>
+          <button class="btab" id="btab-preview" onclick="switchBuilderTab('preview')"><i class="ti ti-eye" aria-hidden="true"></i> Preview</button>
+        </div>
+        <div class="panel active" id="panel-upload">
+          <div class="upload-area" id="upload-area">
+            <div class="empty-pick" id="empty-pick"><i class="ti ti-hand-click" aria-hidden="true"></i><p>Pilih aset dari sidebar</p></div>
+            <div id="asset-form" style="display:none"></div>
+          </div>
+        </div>
+        <div class="panel" id="panel-spec">
+          <div class="spec-area">
+            <div class="spec-file">
+              <div class="spec-fhead"><i class="ti ti-file-description" style="font-size:15px;color:var(--color-text-secondary)" aria-hidden="true"></i><span class="spec-fname">spec.json</span><span class="spec-fdesc">definisi aset template</span></div>
+              <div class="spec-code">{
+  "template": "landing-page-v1",
+  "assets": [
+    { "key": "hero_image", "type": "image", "value": "hero.jpg" },
+    { "key": "logo",       "type": "image", "value": "logo.png" },
+    { "key": "hero_title", "type": "text",  "value": "Judul halaman" },
+    { "key": "hero_desc",  "type": "text",  "value": "Deskripsi singkat" },
+    { "key": "cta_label",  "type": "text",  "value": "Daftar Sekarang" }
+  ]
+}</div>
+            </div>
+            <div class="spec-file">
+              <div class="spec-fhead"><i class="ti ti-file-code" style="font-size:15px;color:var(--color-text-secondary)" aria-hidden="true"></i><span class="spec-fname">index.html</span><span class="spec-fdesc">referensi aset via path</span></div>
+              <div class="spec-code">&lt;img src="assets/hero_image/hero.jpg"&gt;
+&lt;img src="assets/logo/logo.png"&gt;
+&lt;h1 data-key="hero_title"&gt;&lt;/h1&gt;
+&lt;p  data-key="hero_desc"&gt;&lt;/p&gt;
+&lt;a  data-key="cta_label"&gt;&lt;/a&gt;</div>
+            </div>
+            <div class="spec-file">
+              <div class="spec-fhead"><i class="ti ti-brand-javascript" style="font-size:15px;color:var(--color-text-secondary)" aria-hidden="true"></i><span class="spec-fname">app.js</span><span class="spec-fdesc">load value.json saat runtime</span></div>
+              <div class="spec-code">fetch('assets/value.json')
+  .then(r => r.json())
+  .then(data => {
+    document.querySelectorAll('[data-key]')
+      .forEach(el => {
+        el.textContent = data[el.dataset.key]
+      })
+  })</div>
+            </div>
+            <div class="spec-file">
+              <div class="spec-fhead"><i class="ti ti-folder" style="font-size:15px;color:var(--color-text-secondary)" aria-hidden="true"></i><span class="spec-fname">assets/ (output setelah publish)</span></div>
+              <div class="spec-code">sites/klinik-sehat/
+├── index.html     ← copy dari template
+├── app.js         ← copy dari template
+├── style.css      ← copy dari template
+└── assets/
+    ├── hero_image/
+    │   └── hero.jpg
+    ├── logo/
+    │   └── logo.png
+    └── value.json
+        {
+          "hero_title": "Kesehatan Anda...",
+          "hero_desc":  "Layanan profesional...",
+          "cta_label":  "Daftar Sekarang"
+        }</div>
+            </div>
+          </div>
+        </div>
+        <div class="panel" id="panel-preview">
+          <div class="preview-frame">
+            <div class="prev-bar">
+              <div class="prev-dots"><div class="prev-dot r"></div><div class="prev-dot a"></div><div class="prev-dot g"></div></div>
+              <div class="prev-addr"><i class="ti ti-lock" style="font-size:11px" aria-hidden="true"></i> klinik-sehat.peperclip.id</div>
+              <div class="dev-btns">
+                <button class="dev-btn active" id="dev-d" onclick="setDev('desktop')" title="Desktop"><i class="ti ti-device-desktop" aria-hidden="true"></i></button>
+                <button class="dev-btn" id="dev-t" onclick="setDev('tablet')" title="Tablet"><i class="ti ti-device-ipad" aria-hidden="true"></i></button>
+                <button class="dev-btn" id="dev-m" onclick="setDev('mobile')" title="Mobile"><i class="ti ti-device-mobile" aria-hidden="true"></i></button>
+              </div>
+            </div>
+            <div class="prev-canvas">
+              <div class="site-frame desktop" id="site-frame">
+                <div class="sf-nav">
+                  <div class="sf-logo" id="pv-logo">Klinik Sehat Bersama</div>
+                  <div class="sf-links"><span>Layanan</span><span>Dokter</span><span>Kontak</span></div>
+                </div>
+                <div class="sf-hero">
+                  <div class="sf-tag">Klinik Terpercaya</div>
+                  <div class="sf-title" id="pv-title">Kesehatan Anda, Prioritas Kami</div>
+                  <div class="sf-desc" id="pv-desc">Layanan kesehatan profesional dengan teknologi terkini untuk seluruh keluarga Anda.</div>
+                  <div class="sf-cta" id="pv-cta">Daftar Sekarang</div>
+                  <div class="sf-img" id="pv-hero"><i class="ti ti-photo" style="font-size:28px;opacity:.35" aria-hidden="true"></i></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="publish-wrap" style="display:none;position:relative">
+  <div class="publish-overlay" id="pub-overlay">
+    <div class="publish-modal">
+      <div class="pm-title">Publish site</div>
+      <div class="pm-sub">File template akan di-copy ke host folder</div>
+      <div class="pm-field">
+        <div class="pm-label">Subdomain</div>
+        <input class="pm-input" id="pub-slug" type="text" value="klinik-sehat" oninput="updateSlug(this.value)">
+        <div class="pm-url-preview" id="pub-url">→ klinik-sehat.peperclip.id</div>
+      </div>
+      <div class="pm-checklist" id="pub-checklist"></div>
+      <div class="pm-actions">
+        <button class="btn-ghost" onclick="closePublish()">Batal</button>
+        <button class="btn-primary" id="pub-btn" onclick="doPublish()">Deploy sekarang →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const assets=[
+  {key:'hero_image',type:'image',value:'hero.jpg',path:'assets/hero_image/',uploaded:true,dataUrl:null,fileName:'hero.jpg'},
+  {key:'logo',type:'image',value:'logo.png',path:'assets/logo/',uploaded:false,dataUrl:null,fileName:null},
+  {key:'hero_title',type:'text',value:'Kesehatan Anda, Prioritas Kami',path:'value.json',uploaded:true,text:'Kesehatan Anda, Prioritas Kami'},
+  {key:'hero_desc',type:'text',value:'Layanan kesehatan profesional dengan teknologi terkini untuk seluruh keluarga Anda.',path:'value.json',uploaded:true,text:'Layanan kesehatan profesional dengan teknologi terkini untuk seluruh keluarga Anda.'},
+  {key:'cta_label',type:'text',value:'Daftar Sekarang',path:'value.json',uploaded:false,text:''},
+];
+let selKey=null,selectedTpl=null,curSiteName='Klinik Sehat Bersama',curTplName='Landing Page v1';
+
+function goScreen(s){
+  document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));
+  document.getElementById('screen-'+s).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(x=>x.classList.remove('active'));
+  if(s==='dash')document.getElementById('nav-dash').classList.add('active');
+  if(s==='templates')document.getElementById('nav-templates').classList.add('active');
+  if(s==='builder'){renderSidebar();switchBuilderTab('upload');}
+}
+
+function openBuilder(slug,tpl){
+  curSiteName=slug==='klinik-sehat'?'Klinik Sehat Bersama':slug==='dental-rakyat'?'PT Dental Rakyat':'Franchise Clinic OS';
+  curTplName=tpl;
+  document.getElementById('builder-site-name').textContent=curSiteName;
+  document.getElementById('builder-tpl-badge').textContent=tpl;
+  goScreen('builder');
+}
+
+function selectTpl(id){
+  document.querySelectorAll('.tpl-card').forEach(x=>x.classList.remove('selected'));
+  document.getElementById('tpl-'+id).classList.add('selected');
+  selectedTpl=id;
+  const btn=document.getElementById('tpl-use-btn');
+  btn.disabled=false;btn.style.opacity='1';
+}
+
+function useTpl(){
+  if(!selectedTpl)return;
+  const names={landing:'Landing Page v1',clinic:'Clinic Pro v2',biz:'Business v1',portfolio:'Portfolio v1'};
+  curSiteName='Site Baru';curTplName=names[selectedTpl];
+  document.getElementById('builder-site-name').textContent=curSiteName;
+  document.getElementById('builder-tpl-badge').textContent=curTplName;
+  goScreen('builder');
+}
+
+function renderSidebar(){
+  const list=document.getElementById('sb-asset-list');
+  list.innerHTML='';
+  assets.forEach(a=>{
+    const el=document.createElement('div');
+    el.className='sb-asset'+(selKey===a.key?' sel':'');
+    el.onclick=()=>selectAsset(a.key);
+    el.innerHTML=`<div class="sb-asset-icon ${a.type==='image'?'img':'txt'}"><i class="ti ${a.type==='image'?'ti-photo':'ti-text-size'}" aria-hidden="true"></i></div><div class="sb-asset-meta"><div class="sb-asset-key">${a.key}</div><div class="sb-asset-type">${a.type} · ${a.path}</div></div><div class="status-dot ${a.uploaded?'done':'pend'}"></div>`;
+    list.appendChild(el);
+  });
+  const done=assets.filter(x=>x.uploaded).length;
+  const pct=Math.round(done/assets.length*100);
+  document.getElementById('prog-label').textContent=done+' / '+assets.length;
+  document.getElementById('prog-fill').style.width=pct+'%';
+}
+
+function selectAsset(key){
+  selKey=key;
+  const a=assets.find(x=>x.key===key);
+  document.getElementById('empty-pick').style.display='none';
+  const form=document.getElementById('asset-form');
+  form.style.display='block';
+  if(a.type==='image'){
+    form.innerHTML=`<div class="asset-card"><div class="ac-head"><div><div class="ac-title">${a.key}</div><div class="ac-path">→ ${a.path}${a.value}</div></div><span class="type-badge img">image</span></div>${a.uploaded&&a.dataUrl?`<div class="uploaded-box"><div class="ub-bar"><div class="ub-name"><i class="ti ti-check" style="color:#639922" aria-hidden="true"></i>${a.fileName}</div><button class="btn-rm" onclick="removeA('${a.key}')">Hapus</button></div><img class="ub-img" src="${a.dataUrl}"></div><div class="save-banner"><i class="ti ti-circle-check" aria-hidden="true"></i> Disimpan di ${a.path}${a.value}</div>`:`<div class="dropzone"><div class="dz-icon"><i class="ti ti-cloud-upload" aria-hidden="true"></i></div><div class="dz-text">Drag & drop atau klik untuk upload</div><div class="dz-sub">PNG, JPG, WEBP – maks 5MB</div><input type="file" accept="image/*" onchange="handleImg(event,'${a.key}')"></div>`}<div class="path-info"><i class="ti ti-folder" style="font-size:13px" aria-hidden="true"></i>Output: <strong>${a.path}${a.value}</strong></div></div>`;
+  }else{
+    form.innerHTML=`<div class="asset-card"><div class="ac-head"><div><div class="ac-title">${a.key}</div><div class="ac-path">→ value.json["${a.key}"]</div></div><span class="type-badge txt">text</span></div><div class="text-inp"><textarea id="ta-${a.key}" oninput="handleTxt('${a.key}',this.value)">${a.text||''}</textarea></div>${a.uploaded?`<div class="save-banner" id="sb-${a.key}"><i class="ti ti-circle-check" aria-hidden="true"></i> Tersimpan ke value.json["${a.key}"]</div>`:`<div id="sb-${a.key}"></div>`}<div class="path-info"><i class="ti ti-file-code" style="font-size:13px" aria-hidden="true"></i>Output: <strong>assets/value.json</strong></div></div>`;
+  }
+  renderSidebar();
+  switchBuilderTab('upload');
+}
+
+function handleImg(e,key){
+  const f=e.target.files[0];if(!f)return;
+  const a=assets.find(x=>x.key===key);
+  const r=new FileReader();
+  r.onload=ev=>{a.dataUrl=ev.target.result;a.uploaded=true;a.fileName=f.name;updatePrev(key,a.dataUrl);selectAsset(key);};
+  r.readAsDataURL(f);
+}
+function removeA(key){const a=assets.find(x=>x.key===key);a.dataUrl=null;a.uploaded=false;a.fileName=null;updatePrev(key,null);selectAsset(key);}
+function handleTxt(key,v){
+  const a=assets.find(x=>x.key===key);a.text=v;
+  if(v.trim()){a.uploaded=true;const sb=document.getElementById('sb-'+key);if(sb)sb.innerHTML=`<div class="save-banner"><i class="ti ti-circle-check" aria-hidden="true"></i> Tersimpan ke value.json["${key}"]</div>`;}
+  else{a.uploaded=false;const sb=document.getElementById('sb-'+key);if(sb)sb.innerHTML='';}
+  updatePrev(key,v);renderSidebar();
+}
+function updatePrev(key,val){
+  if(key==='hero_title'){const el=document.getElementById('pv-title');if(el&&val)el.textContent=val;}
+  if(key==='hero_desc'){const el=document.getElementById('pv-desc');if(el&&val)el.textContent=val;}
+  if(key==='cta_label'){const el=document.getElementById('pv-cta');if(el&&val)el.textContent=val;}
+  if(key==='hero_image'){const el=document.getElementById('pv-hero');if(el){if(val)el.innerHTML=`<img src="${val}" style="width:100%;height:160px;object-fit:cover;display:block;">`;else el.innerHTML=`<i class="ti ti-photo" style="font-size:28px;opacity:.35" aria-hidden="true"></i>`;}}
+}
+function switchBuilderTab(t){
+  ['upload','spec','preview'].forEach(x=>{
+    document.getElementById('panel-'+x).classList.toggle('active',x===t);
+    document.getElementById('btab-'+x)?.classList.toggle('active',x===t);
+  });
+}
+function setDev(d){
+  const f=document.getElementById('site-frame');
+  ['desktop','tablet','mobile'].forEach(x=>{f.classList.toggle(x,x===d);document.getElementById('dev-'+d[0]).classList.toggle('active',x===d);});
+}
+
+function showPublish(){
+  const pw=document.getElementById('publish-wrap');
+  pw.style.display='block';
+  const shell=document.getElementById('shell');
+  shell.parentNode.insertBefore(pw,shell.nextSibling);
+  pw.style.cssText='display:block;position:relative;margin-top:-700px;height:700px;';
+  renderChecklist();
+}
+function closePublish(){document.getElementById('publish-wrap').style.display='none';}
+function updateSlug(v){document.getElementById('pub-url').textContent='→ '+v+'.peperclip.id';}
+function renderChecklist(){
+  const done=assets.filter(x=>x.uploaded).length;
+  const total=assets.length;
+  const ok=done===total;
+  let html='';
+  assets.forEach(a=>{
+    html+=`<div class="pm-check-row ${a.uploaded?'ok':'warn'}"><i class="ti ${a.uploaded?'ti-circle-check':'ti-alert-circle'}" aria-hidden="true"></i> ${a.key} <span style="margin-left:auto;font-size:10px;opacity:.7">${a.uploaded?'ready':'belum diisi'}</span></div>`;
+  });
+  document.getElementById('pub-checklist').innerHTML=html;
+  const btn=document.getElementById('pub-btn');
+  if(!ok){btn.style.opacity='.5';btn.textContent='Lengkapi aset dulu';}
+  else{btn.style.opacity='1';btn.textContent='Deploy sekarang →';}
+}
+function doPublish(){
+  const done=assets.filter(x=>x.uploaded).length===assets.length;
+  if(!done){renderChecklist();return;}
+  const slug=document.getElementById('pub-slug').value||'my-site';
+  closePublish();
+  sendPrompt('Bantu saya setup serve config untuk sites/'+slug+'/ di hosting — file sudah di-copy: index.html, app.js, style.css, dan assets/');
+}
+renderSidebar();
+</script>

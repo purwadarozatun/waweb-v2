@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.Title}}</title>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    <link rel="stylesheet" href="/static/css/builder.css">
+    <style>
+        .htmx-indicator { display: none; }
+        .htmx-request .htmx-indicator { display: inline; }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <h1 class="auth-title">New Workspace</h1>
+            
+            <form hx-post="/workspace/create" hx-target="#message" class="auth-form">
+                <div id="message" class="auth-message"></div>
+                
+                <div class="form-group">
+                    <label for="name" class="form-label">Workspace Name</label>
+                    <input type="text" 
+                           id="name" 
+                           name="name" 
+                           required 
+                           placeholder="My Awesome Website"
+                           class="form-input">
+                </div>
+                
+                <button type="submit" class="btn-primary w-full">
+                    <i class="ti ti-plus"></i> Create & Select Template
+                    <span class="htmx-indicator">...</span>
+                </button>
+            </form>
+            
+            <p class="auth-footer">
+                <a href="/dashboard">← Back to Dashboard</a>
+            </p>
+        </div>
+    </div>
+</body>
+</html>

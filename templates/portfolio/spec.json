@@ -1,0 +1,67 @@
+{
+  "name": "Portfolio Template",
+  "description": "Showcase your work with this elegant portfolio template",
+  "thumbnail": "/static/templates/portfolio.png",
+  "fields": {
+    "site_title": {
+      "label": "Site Title",
+      "type": "text",
+      "default": "My Portfolio"
+    },
+    "name": {
+      "label": "Your Name",
+      "type": "text",
+      "default": "John Doe"
+    },
+    "tagline": {
+      "label": "Tagline",
+      "type": "text",
+      "default": "Web Developer & Designer"
+    },
+    "about": {
+      "label": "About Me",
+      "type": "textarea",
+      "default": "I'm a passionate web developer with 5 years of experience creating beautiful and functional websites."
+    },
+    "email": {
+      "label": "Email",
+      "type": "text",
+      "default": "hello@example.com"
+    },
+    "github": {
+      "label": "GitHub URL",
+      "type": "text",
+      "default": "https://github.com/yourusername"
+    },
+    "linkedin": {
+      "label": "LinkedIn URL",
+      "type": "text",
+      "default": "https://linkedin.com/in/yourusername"
+    },
+    "accent_color": {
+      "label": "Accent Color",
+      "type": "color",
+      "default": "#8b5cf6"
+    },
+    "project_1_title": {
+      "label": "Project 1 Title",
+      "type": "text",
+      "default": "E-commerce Platform"
+    },
+    "project_1_description": {
+      "label": "Project 1 Description",
+      "type": "textarea",
+      "default": "A full-featured e-commerce platform built with modern technologies."
+    },
+    "project_2_title": {
+      "label": "Project 2 Title",
+      "type": "text",
+      "default": "Mobile App"
+    },
+    "project_2_description": {
+      "label": "Project 2 Description",
+      "type": "textarea",
+      "default": "Cross-platform mobile application with real-time features."
+    }
+  }
+}

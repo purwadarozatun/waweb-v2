@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.Title}}</title>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    <link rel="stylesheet" href="/static/css/builder.css">
+</head>
+<body>
+    <div class="topbar">
+        <div class="topbar-brand">
+            <div class="brand-dot"></div>
+            WaWeb Sites
+        </div>
+        <div class="topbar-nav">
+            <a href="/dashboard" class="nav-btn active">Sites</a>
+        </div>
+        <div class="topbar-right">
+            <div class="avatar-wrap" id="avatar-wrap">
+                <div class="avatar" id="avatar-btn" onclick="toggleAvatarMenu()" style="cursor:pointer">
+                    {{if .Email}}
+                        {{slice .Email 0 2}}
+                    {{else}}
+                        U
+                    {{end}}
+                </div>
+                <div class="avatar-dropdown" id="avatar-dropdown">
+                    <div class="avatar-dropdown-user">
+                        <div class="avatar-dropdown-name">{{if .Name}}{{.Name}}{{else}}User{{end}}</div>
+                        <div class="avatar-dropdown-email">{{if .Email}}{{.Email}}{{else}}–{{end}}</div>
+                    </div>
+                    <div class="avatar-dropdown-divider"></div>
+                    <form action="/logout" method="POST">
+                        <button type="submit" class="avatar-dropdown-item danger">
+                            <i class="ti ti-logout"></i> Logout
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="dashboard-body">
+        <div class="dash-header">
+            <div class="dash-title">My Sites</div>
+            <a href="/workspace/new" class="btn-new">
+                <i class="ti ti-plus"></i> New Site
+            </a>
+        </div>
+
+        <div class="sites-grid">
+            {{if .Workspaces}}
+                {{range .Workspaces}}
+                <div class="site-card">
+                    <div class="site-thumb">
+                        <i class="ti ti-world"></i>
+                    </div>
+                    <div class="site-info">
+                        <div class="site-name">{{.Name}}</div>
+                        <div class="site-meta">
+                            {{if .IsPublished}}
+                                <span class="site-status live">
+                                    <i class="ti ti-circle-check"></i> Live
+                                </span>
+                            {{else}}
+                                <span class="site-status draft">Draft</span>
+                            {{end}}
+                            {{if .TemplateID}}
+                                <span>{{.TemplateID}}</span>
+                            {{end}}
+                        </div>
+                    </div>
+                    <div class="site-actions">
+                        {{if .TemplateID}}
+                            <a href="/builder/{{.ID}}" class="btn-sm primary">
+                                {{if .IsPublished}}View{{else}}Edit{{end}}
+                            </a>
+                        {{else}}
+                            <a href="/templates?workspace={{.ID}}" class="btn-sm primary">
+                                Select Template
+                            </a>
+                        {{end}}
+                        {{if .IsPublished}}
+                            <a href="/sites/{{.Subdomain}}/" target="_blank" class="btn-sm">
+                                <i class="ti ti-external-link"></i> Visit
+                            </a>
+                        {{end}}
+                        <button hx-delete="/workspace/{{.ID}}" 
+                                hx-confirm="Delete this workspace?"
+                                hx-target="closest .site-card"
+                                hx-swap="outerHTML swap:0.5s"
+                                class="btn-sm danger">
+                            <i class="ti ti-trash"></i>
+                        </button>
+                    </div>
+                </div>
+                {{end}}
+
+                <a href="/workspace/new" class="site-card site-card-new">
+                    <i class="ti ti-plus" style="font-size:24px"></i>
+                    <span>New Site</span>
+                </a>
+            {{else}}
+                <div class="site-card site-card-new" style="grid-column: 1 / -1">
+                    <i class="ti ti-plus" style="font-size:32px"></i>
+                    <span style="font-size:14px">Create your first site</span>
+                    <p style="font-size:12px; color:var(--color-text-tertiary); margin-top:4px">
+                        Click here to get started
+                    </p>
+                </div>
+            {{end}}
+        </div>
+    </div>
+    <script>
+        function toggleAvatarMenu() {
+            const dd = document.getElementById('avatar-dropdown');
+            dd.classList.toggle('open');
+        }
+        // Close when clicking outside
+        document.addEventListener('click', function(e) {
+            const wrap = document.getElementById('avatar-wrap');
+            if (wrap && !wrap.contains(e.target)) {
+                document.getElementById('avatar-dropdown').classList.remove('open');
+            }
+        });
+    </script>
+</body>
+</html>

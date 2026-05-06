@@ -1,0 +1,102 @@
+{
+  "name": "Wedding Invitation",
+  "description": "Elegant wedding invitation page with pink and floral theme",
+  "thumbnail": "/static/templates/wedding.png",
+  "fields": {
+    "bride_name": {
+      "label": "Bride Name",
+      "type": "text",
+      "default": "Sophia"
+    },
+    "groom_name": {
+      "label": "Groom Name",
+      "type": "text",
+      "default": "Alexander"
+    },
+    "wedding_date": {
+      "label": "Wedding Date",
+      "type": "text",
+      "default": "Saturday, June 14, 2025"
+    },
+    "wedding_quote": {
+      "label": "Romantic Quote",
+      "type": "textarea",
+      "default": "Two souls, one heart. Today we begin our forever."
+    },
+    "ceremony_time": {
+      "label": "Ceremony Time",
+      "type": "text",
+      "default": "10:00 AM"
+    },
+    "ceremony_venue": {
+      "label": "Ceremony Venue",
+      "type": "text",
+      "default": "St. Mary's Cathedral"
+    },
+    "ceremony_address": {
+      "label": "Ceremony Address",
+      "type": "text",
+      "default": "123 Church Street, City"
+    },
+    "reception_time": {
+      "label": "Reception Time",
+      "type": "text",
+      "default": "12:00 PM"
+    },
+    "reception_venue": {
+      "label": "Reception Venue",
+      "type": "text",
+      "default": "The Grand Ballroom"
+    },
+    "reception_address": {
+      "label": "Reception Address",
+      "type": "text",
+      "default": "456 Rose Avenue, City"
+    },
+    "our_story": {
+      "label": "Our Story",
+      "type": "textarea",
+      "default": "We met on a rainy afternoon in a little coffee shop. What started as a chance encounter became the most beautiful journey of our lives. After three wonderful years together, we are ready to say 'I Do'."
+    },
+    "rsvp_deadline": {
+      "label": "RSVP Deadline",
+      "type": "text",
+      "default": "May 31, 2025"
+    },
+    "rsvp_contact": {
+      "label": "RSVP Contact (email / WhatsApp)",
+      "type": "text",
+      "default": "rsvp@ourwedding.com"
+    },
+    "hero_photo": {
+      "label": "Hero / Couple Photo",
+      "type": "image",
+      "default": ""
+    },
+    "gallery_1": {
+      "label": "Gallery Photo 1",
+      "type": "image",
+      "default": ""
+    },
+    "gallery_2": {
+      "label": "Gallery Photo 2",
+      "type": "image",
+      "default": ""
+    },
+    "gallery_3": {
+      "label": "Gallery Photo 3",
+      "type": "image",
+      "default": ""
+    },
+    "gallery_4": {
+      "label": "Gallery Photo 4",
+      "type": "image",
+      "default": ""
+    },
+    "accent_color": {
+      "label": "Accent Color",
+      "type": "color",
+      "default": "#d4608a"
+    }
+  }
+}

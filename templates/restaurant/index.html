@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">My Restaurant</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root { --accent: #e67e22; }
+
+        body {
+            font-family: 'Georgia', serif;
+            color: #2c2c2c;
+            background: #fafafa;
+        }
+
+        /* ── Nav ── */
+        nav {
+            position: fixed; top: 0; width: 100%; z-index: 99;
+            background: rgba(0,0,0,.88);
+            backdrop-filter: blur(10px);
+            padding: 0 40px;
+            display: flex; align-items: center; justify-content: space-between;
+            height: 60px;
+        }
+        .nav-logo {
+            font-size: 22px; font-weight: 700;
+            color: white; letter-spacing: 1px;
+        }
+        .nav-links { display: flex; gap: 28px; }
+        .nav-links a {
+            color: rgba(255,255,255,.75);
+            text-decoration: none; font-size: 14px;
+            font-family: sans-serif;
+            transition: color .2s;
+        }
+        .nav-links a:hover { color: white; }
+
+        /* ── Hero ── */
+        .hero {
+            position: relative; height: 80vh; min-height: 480px;
+            overflow: hidden; display: flex;
+            align-items: center; justify-content: center;
+        }
+        #hero-image {
+            position: absolute; inset: 0;
+            width: 100%; height: 100%;
+            object-fit: cover;
+        }
+        #hero-image.is-placeholder {
+            object-fit: contain;
+            background: #f0f0f0;
+        }
+        .hero-overlay {
+            position: absolute; inset: 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,.35) 0%, rgba(0,0,0,.6) 100%);
+        }
+        .hero-content {
+            position: relative; z-index: 1;
+            text-align: center; color: white; padding: 0 20px;
+        }
+        .hero-content h1 {
+            font-size: clamp(2rem, 5vw, 4rem);
+            font-weight: 700; margin-bottom: 12px;
+            text-shadow: 0 2px 8px rgba(0,0,0,.4);
+        }
+        .hero-content p {
+            font-size: clamp(1rem, 2vw, 1.4rem);
+            opacity: .9; font-style: italic;
+        }
+        .scroll-hint {
+            position: absolute; bottom: 24px; left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255,255,255,.6); font-size: 12px;
+            font-family: sans-serif; letter-spacing: 2px;
+            text-transform: uppercase;
+            animation: bounce 2s infinite;
+        }
+        @keyframes bounce {
+            0%,100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(6px); }
+        }
+
+        /* ── Section ── */
+        .section { padding: 80px 20px; }
+        .container { max-width: 1100px; margin: 0 auto; }
+        .section-title {
+            text-align: center; font-size: 2rem;
+            margin-bottom: 12px; color: #1a1a1a;
+        }
+        .section-divider {
+            width: 60px; height: 3px;
+            background: var(--accent);
+            margin: 0 auto 40px;
+            border-radius: 2px;
+        }
+
+        /* ── About ── */
+        .about-section { background: white; }
+        .about-text {
+            max-width: 680px; margin: 0 auto;
+            text-align: center; font-size: 1.1rem;
+            line-height: 1.9; color: #555;
+        }
+
+        /* ── Gallery ── */
+        .gallery-section { background: #fafafa; }
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+        @media (max-width: 640px) {
+            .gallery-grid { grid-template-columns: 1fr; }
+        }
+        .gallery-item {
+            border-radius: 12px; overflow: hidden;
+            aspect-ratio: 4/3;
+            background: #f0f0f0;
+            position: relative;
+        }
+        .gallery-item img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            transition: transform .4s ease;
+        }
+        .gallery-item:hover img { transform: scale(1.05); }
+        .gallery-item img.is-placeholder {
+            object-fit: contain;
+        }
+
+        /* ── Info / Contact ── */
+        .info-section { background: white; }
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 30px;
+        }
+        .info-card {
+            text-align: center; padding: 30px 20px;
+            border-radius: 12px;
+            background: #fafafa;
+            border: 1px solid #eee;
+        }
+        .info-icon {
+            font-size: 2rem; margin-bottom: 12px;
+        }
+        .info-card h3 {
+            font-size: 13px; text-transform: uppercase;
+            letter-spacing: 1px; color: #999;
+            margin-bottom: 8px; font-family: sans-serif;
+        }
+        .info-card p {
+            font-size: 15px; color: #333;
+            line-height: 1.6;
+        }
+
+        /* ── Footer ── */
+        footer {
+            background: #1a1a1a; color: #888;
+            text-align: center; padding: 28px 20px;
+            font-family: sans-serif; font-size: 13px;
+        }
+        footer span { color: var(--accent); }
+    </style>
+</head>
+<body>
+
+    <!-- Nav -->
+    <nav>
+        <div class="nav-logo" id="nav-logo">My Restaurant</div>
+        <div class="nav-links">
+            <a href="#about">About</a>
+            <a href="#gallery">Gallery</a>
+            <a href="#info">Visit Us</a>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero" style="padding-top:0">
+        <img id="hero-image"
+             src=""
+             alt="Hero"
+             class="is-placeholder">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1 id="hero-title">My Restaurant</h1>
+            <p id="hero-tagline">Fresh & Delicious</p>
+        </div>
+        <div class="scroll-hint">↓ scroll</div>
+    </section>
+
+    <!-- About -->
+    <section class="section about-section" id="about">
+        <div class="container">
+            <h2 class="section-title">About Us</h2>
+            <div class="section-divider"></div>
+            <p class="about-text" id="about-text">
+                Welcome to our restaurant where every dish is crafted with love.
+            </p>
+        </div>
+    </section>
+
+    <!-- Gallery -->
+    <section class="section gallery-section" id="gallery">
+        <div class="container">
+            <h2 class="section-title">Gallery</h2>
+            <div class="section-divider"></div>
+            <div class="gallery-grid">
+                <div class="gallery-item">
+                    <img id="gallery-1" src="" alt="Gallery 1" class="is-placeholder">
+                </div>
+                <div class="gallery-item">
+                    <img id="gallery-2" src="" alt="Gallery 2" class="is-placeholder">
+                </div>
+                <div class="gallery-item">
+                    <img id="gallery-3" src="" alt="Gallery 3" class="is-placeholder">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Info -->
+    <section class="section info-section" id="info">
+        <div class="container">
+            <h2 class="section-title">Visit Us</h2>
+            <div class="section-divider"></div>
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="info-icon">📍</div>
+                    <h3>Address</h3>
+                    <p id="address">123 Main Street, City</p>
+                </div>
+                <div class="info-card">
+                    <div class="info-icon">📞</div>
+                    <h3>Phone</h3>
+                    <p id="phone">+1 234 567 890</p>
+                </div>
+                <div class="info-card">
+                    <div class="info-icon">🕐</div>
+                    <h3>Hours</h3>
+                    <p id="hours">Mon–Sun: 11:00 – 22:00</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; <span id="footer-year"></span> <span id="footer-name">My Restaurant</span>. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Inline placeholder SVG (works without server)
+        const PLACEHOLDER_SVG = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='500' viewBox='0 0 800 500'%3E%3Crect width='800' height='500' fill='%23f0f0f0'/%3E%3Crect x='1' y='1' width='798' height='498' fill='none' stroke='%23ddd' stroke-width='2' stroke-dasharray='12 6'/%3E%3Ctext x='50%25' y='43%25' text-anchor='middle' fill='%23aaa' font-size='18' font-family='sans-serif'%3E%F0%9F%93%B7 Please Pick Image%3C/text%3E%3Ctext x='50%25' y='55%25' text-anchor='middle' fill='%23ccc' font-size='13' font-family='sans-serif'%3EUpload an image in the builder%3C/text%3E%3C/svg%3E";
+
+        document.getElementById('footer-year').textContent = new Date().getFullYear();
+
+        function applyImage(imgEl, value) {
+            if (value && value.trim() !== '') {
+                imgEl.src = value;
+                imgEl.classList.remove('is-placeholder');
+                imgEl.onerror = function() {
+                    this.src = PLACEHOLDER_SVG;
+                    this.classList.add('is-placeholder');
+                    this.onerror = null;
+                };
+            } else {
+                imgEl.src = PLACEHOLDER_SVG;
+                imgEl.classList.add('is-placeholder');
+            }
+        }
+
+        fetch('values.json')
+            .then(r => r.json())
+            .then(values => {
+                // Accent color
+                if (values.accent_color) {
+                    document.documentElement.style.setProperty('--accent', values.accent_color);
+                }
+
+                // Text fields
+                const textMap = {
+                    'restaurant_name': ['nav-logo', 'hero-title', 'footer-name'],
+                    'tagline':          ['hero-tagline'],
+                    'about_text':       ['about-text'],
+                    'address':          ['address'],
+                    'phone':            ['phone'],
+                    'hours':            ['hours'],
+                };
+                for (const [key, ids] of Object.entries(textMap)) {
+                    if (values[key]) {
+                        ids.forEach(id => {
+                            const el = document.getElementById(id);
+                            if (el) el.textContent = values[key];
+                        });
+                    }
+                }
+
+                // Page title
+                if (values.restaurant_name) {
+                    document.getElementById('page-title').textContent = values.restaurant_name;
+                }
+
+                // Image fields with fallback
+                applyImage(document.getElementById('hero-image'),  values.hero_image  || '');
+                applyImage(document.getElementById('gallery-1'),   values.gallery_1   || '');
+                applyImage(document.getElementById('gallery-2'),   values.gallery_2   || '');
+                applyImage(document.getElementById('gallery-3'),   values.gallery_3   || '');
+            })
+            .catch(() => {
+                // values.json not available — show placeholders
+                ['hero-image', 'gallery-1', 'gallery-2', 'gallery-3'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) {
+                        el.src = PLACEHOLDER_SVG;
+                        el.classList.add('is-placeholder');
+                    }
+                });
+            });
+    </script>
+</body>
+</html>

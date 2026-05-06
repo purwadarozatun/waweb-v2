@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.Title}}</title>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    <link rel="stylesheet" href="/static/css/builder.css">
+</head>
+<body>
+    <div class="topbar">
+        <div class="topbar-brand">
+            <div class="brand-dot"></div>
+            WaWeb Sites
+        </div>
+        <div class="topbar-nav">
+            <a href="/dashboard" class="nav-btn">Sites</a>
+        </div>
+        <div class="topbar-right">
+            <a href="/dashboard" class="btn-ghost" style="font-size:12px">← Back</a>
+        </div>
+    </div>
+
+    <div class="tpl-body">
+        <div class="tpl-header">
+            <div class="tpl-title">Choose a Template</div>
+            <div class="tpl-sub">Select a template to start building your website</div>
+        </div>
+
+        <div class="tpl-grid">
+            {{if .Templates}}
+                {{range .Templates}}
+                <a href="/templates/{{.ID}}?workspace={{$.WorkspaceID}}" 
+                   class="tpl-card"
+                   hx-get="/templates/{{.ID}}?workspace={{$.WorkspaceID}}"
+                   hx-swap="none">
+                    <div class="tpl-preview">
+                        {{if eq .ID "portfolio"}}
+                            <i class="ti ti-photo" style="font-size:36px;color:var(--color-text-tertiary)"></i>
+                        {{else if eq .ID "simple-landing"}}
+                            <i class="ti ti-layout-bottombar" style="font-size:36px;color:var(--color-text-tertiary)"></i>
+                        {{else}}
+                            <i class="ti ti-template" style="font-size:36px;color:var(--color-text-tertiary)"></i>
+                        {{end}}
+                    </div>
+                    <div class="tpl-info">
+                        <div class="tpl-name">{{.Name}}</div>
+                        <div class="tpl-desc">{{.Description}}</div>
+                    </div>
+                </a>
+                {{end}}
+            {{else}}
+                <div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; color: var(--color-text-tertiary)">
+                    <i class="ti ti-folder-off" style="font-size:48px; margin-bottom:12px"></i>
+                    <p style="font-size:14px">No templates available</p>
+                    <p style="font-size:12px; margin-top:8px">Please add templates to the templates folder</p>
+                </div>
+            {{end}}
+        </div>
+    </div>
+</body>
+</html>
