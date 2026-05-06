@@ -1,0 +1,26 @@
+version: "3.9"
+
+services:
+  waweb:
+    build: .
+    container_name: waweb-v2
+    restart: unless-stopped
+    ports:
+      - "8093:3000"
+    environment:
+      PORT: 3000
+      JWT_SECRET: ${JWT_SECRET}
+      HOST_FOLDER: ./published_sites
+      TEMPLATES_FOLDER: ./templates
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+    volumes:
+      - waweb_uploads:/app/uploads
+      - waweb_published:/app/published_sites
+
+volumes:
+  waweb_uploads:
+  waweb_published:
